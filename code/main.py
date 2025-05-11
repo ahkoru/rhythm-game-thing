@@ -75,11 +75,7 @@ class Game():
             lane_num = f"lane {lane}"
             self.notes[lane_num] = []
             for y in y_values:
-                note = Note(
-                    self.all_sprites, self.kirby_surf,
-                    ((WINDOW_WIDTH / 5) * lane, -y + 500),
-                    1000, self.notes, lane_num
-                    )
+                note = Note(self.all_sprites, self.kirby_surf, ((WINDOW_WIDTH / 5) * lane, -y + 500), 1000, self.notes, lane_num)
                 self.notes[lane_num].append(note)
         
         #? Load the music
@@ -94,17 +90,17 @@ class Game():
 
         match key_name:
             case 'a':
-                self.notes["lane 1"][-1].note_hit(key_name)
+                self.notes["lane 1"][-1].note_hit()
             case 's':
-                self.notes["lane 2"][-1].note_hit(key_name)
+                self.notes["lane 2"][-1].note_hit()
             case 'k':
-                self.notes["lane 3"][-1].note_hit(key_name)
+                self.notes["lane 3"][-1].note_hit()
             case 'l':
-                self.notes["lane 4"][-1].note_hit(key_name)
+                self.notes["lane 4"][-1].note_hit()
             case _:
                 pass
     
-    #NOTE: for debuffing purposes only
+    #NOTE: for debugging purposes only
     def highlight(self):
         for lane in self.notes.keys():
             pos = self.notes[lane][-1].rect.center
@@ -136,7 +132,7 @@ class Game():
                 
                 #? Draw
                 self.display.fill('black')
-                pygame.draw.line(self.display, 'white', (0, 550), (WINDOW_WIDTH, 550), 10)
+                pygame.draw.line(self.display, 'white', (0, LINE_HEIGHT), (WINDOW_WIDTH, LINE_HEIGHT), 10)
                 self.all_sprites.draw(self.display)
                 self.highlight()
 
