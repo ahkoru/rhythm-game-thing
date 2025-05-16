@@ -4,11 +4,11 @@ from random import randint, uniform
 class Note(pygame.sprite.Sprite):
     def __init__(self, groups, surf, pos, note_speed, notes, lane_num):
         super().__init__(groups)
-        self.pos = (pos, 100)
+        self.pos = pos
         self.lane_num = lane_num
         self.notes = notes
         self.image = surf
-        self.rect = self.image.get_frect(midbottom = self.pos)
+        self.rect = self.image.get_frect(center = pos)
         self.speed = note_speed
         self.direction = pygame.Vector2(0, 1)
         
