@@ -168,7 +168,7 @@ class Game():
         self.note_sprites.empty()
         self.music.stop()
             
-
+#dev start
 if __name__ == '__main__':
     game = Game()
     game.run()
