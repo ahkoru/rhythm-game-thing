@@ -1,5 +1,6 @@
 from sprites import *
 from classes import *
+from menus import *
 
 
 class Game():
@@ -12,8 +13,6 @@ class Game():
         
         #? Setup
         self.clock = pygame.Clock()
-        
-        self.is_playing = False
         
         #? Sprite/Sprite groups
         self.main_menu_sprites = pygame.sprite.Group()
@@ -31,6 +30,9 @@ class Game():
     
     def text(self, content):
         pass
+    
+    def load_menu(self):
+        self.menus = Menus()
     
     def import_map(self):
         beatmap_path = askopenfilename()                        #* Absolute path
@@ -92,6 +94,14 @@ class Game():
             case _:
                 pass
     
+    def place_notes(self):
+        for lane, y_values in enumerate(self.beatmap.values(), 1):
+                lane_num = f"lane {lane}"
+                if y_values[-1] <= pygame.time.get_ticks() - self.load_time:
+                    note = Note(self.note_sprites, self.kirby_surf, (WINDOW_WIDTH / 5) * lane, 1000, self.notes, lane_num)
+                    self.notes[lane_num].append(note)
+                    self.beatmap[lane_num].pop()
+    
     #NOTE: for debugging purposes only
     def highlight(self):
         for lane in self.notes.keys():
@@ -106,69 +116,15 @@ class Game():
             text_rect = text_surf.get_frect(center = pos)
             self.display.blit(text_surf, text_rect)
 
-    def run(self):
-        while True:
-            #? Game clock
-            dt = self.clock.tick() / 1000
-            
-            #? Event loop
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.button.is_clicked() and pygame.mouse.get_pressed()[0]:
-                        self.play()
-
-            #? Updates
-            self.main_menu_sprites.update(dt)
-                
-            #? Draw
-            self.display.fill('black')
-            self.main_menu_sprites.draw(self.display)
-       
-            pygame.display.flip()
-            
+    def debug(self, info, y = 10, x = 10):
+        debug_surf = self.font.render(info, True, 'white', 'black')
+        debug_rect = debug_surf.get_frect(topleft = (x, y))
+        self.display.blit(debug_surf, debug_rect)
     
-    def play(self):
-        running = True
-        self.import_map()
-        self.load_map()
-        self.load_time = pygame.time.get_ticks()
-        self.music.play()
-        while running:
-            dt = self.clock.tick() / 1000
+    def run(self):
+        self.menus.main_menu()
         
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == pygame.KEYDOWN:
-                    self.pressed(event)
-                    
-                    if event.key == pygame.K_ESCAPE:
-                        running = False
-            
-            #? Update
-            for lane, y_values in enumerate(self.beatmap.values(), 1):
-                lane_num = f"lane {lane}"
-                if y_values[-1] <= pygame.time.get_ticks() - self.load_time:
-                    note = Note(self.note_sprites, self.kirby_surf, (WINDOW_WIDTH / 5) * lane, 1000, self.notes, lane_num)
-                    self.notes[lane_num].append(note)
-                    self.beatmap[lane_num].pop()
-            self.note_sprites.update(dt)
-            
-            #? Draw
-            self.display.fill('blue')
-            pygame.draw.line(self.display, 'white', (0, LINE_HEIGHT), (WINDOW_WIDTH, LINE_HEIGHT), 10)
-            self.note_sprites.draw(self.display)
-            
-            pygame.display.flip()
-            
-        self.note_sprites.empty()
-        self.music.stop()
-            
-#dev start
 if __name__ == '__main__':
     game = Game()
+    game.load_menu()
     game.run()
