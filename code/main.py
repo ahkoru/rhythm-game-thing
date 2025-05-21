@@ -1,6 +1,7 @@
 from sprites import *
 from classes import *
 from menus import *
+from debug import *
 
 
 class Game():
@@ -23,16 +24,14 @@ class Game():
         self.kirby_surf = pygame.image.load("assets/Kirb.png").convert_alpha()
         self.font = pygame.Font(None, 50)
         self.button = Button(self.main_menu_sprites, "assets/Kirb.png", True, (WINDOW_WIDTH/2, WINDOW_LENGTH/2))
+        self.debug = PgDebug()
+        self.debug.debugging = True
        
        #? Notes
         self.notes: dict[str, list[Note]] = {"lane 1":[], "lane 2":[], "lane 3":[], "lane 4":[]}
-        
-    
+
     def text(self, content):
         pass
-    
-    def load_menu(self):
-        self.menus = Menus()
     
     def import_map(self):
         beatmap_path = askopenfilename()                        #* Absolute path
@@ -102,7 +101,7 @@ class Game():
                     self.notes[lane_num].append(note)
                     self.beatmap[lane_num].pop()
     
-    #NOTE: for debugging purposes only
+    #? for debugging purposes only
     def highlight(self):
         for lane in self.notes.keys():
             pos = self.notes[lane][-1].rect.center
@@ -116,15 +115,10 @@ class Game():
             text_rect = text_surf.get_frect(center = pos)
             self.display.blit(text_surf, text_rect)
 
-    def debug(self, info, y = 10, x = 10):
-        debug_surf = self.font.render(info, True, 'white', 'black')
-        debug_rect = debug_surf.get_frect(topleft = (x, y))
-        self.display.blit(debug_surf, debug_rect)
-    
     def run(self):
+        self.menus = Menus()
         self.menus.main_menu()
         
 if __name__ == '__main__':
     game = Game()
-    game.load_menu()
     game.run()

@@ -55,6 +55,7 @@ class Menus(Game):
                 self.display.fill('blue')
                 pygame.draw.line(self.display, 'white', (0, LINE_HEIGHT), (WINDOW_WIDTH, LINE_HEIGHT), 10)
                 self.note_sprites.draw(self.display)
+                self.debug.debug(str(pygame.mouse.get_pos()))
                             
                 pygame.display.flip()
                 
