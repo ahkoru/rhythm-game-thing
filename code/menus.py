@@ -1,9 +1,16 @@
 from sprites import *
-from main import Game
+from main import Game, Button, PgDebug
 
 class Menus(Game):
     def __init__(self):
         super().__init__()
+                
+        #? Loading stuff
+        self.kirby_surf = pygame.image.load("assets/Kirb.png").convert_alpha()
+        self.font = pygame.Font(None, 50)
+        self.button = Button(self.main_menu_sprites, "assets/Kirb.png", True, (WINDOW_WIDTH/2, WINDOW_LENGTH/2))
+        self.debug = PgDebug()
+        self.debug.debugging = True
     
     def main_menu(self):
         while True:
@@ -55,7 +62,6 @@ class Menus(Game):
                 self.display.fill('blue')
                 pygame.draw.line(self.display, 'white', (0, LINE_HEIGHT), (WINDOW_WIDTH, LINE_HEIGHT), 10)
                 self.note_sprites.draw(self.display)
-                self.debug.debug(str(pygame.mouse.get_pos()))
                             
                 pygame.display.flip()
                 

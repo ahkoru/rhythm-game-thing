@@ -11,21 +11,12 @@ class Game():
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_LENGTH))
         pygame.display.set_caption('lmao nerd')
         
-        
         #? Setup
         self.clock = pygame.Clock()
         
         #? Sprite/Sprite groups
         self.main_menu_sprites = pygame.sprite.Group()
         self.note_sprites = pygame.sprite.Group()
-        
-        
-        #? Loading stuff
-        self.kirby_surf = pygame.image.load("assets/Kirb.png").convert_alpha()
-        self.font = pygame.Font(None, 50)
-        self.button = Button(self.main_menu_sprites, "assets/Kirb.png", True, (WINDOW_WIDTH/2, WINDOW_LENGTH/2))
-        self.debug = PgDebug()
-        self.debug.debugging = True
        
        #? Notes
         self.notes: dict[str, list[Note]] = {"lane 1":[], "lane 2":[], "lane 3":[], "lane 4":[]}
@@ -98,7 +89,7 @@ class Game():
                 lane_num = f"lane {lane}"
                 if y_values[-1] <= pygame.time.get_ticks() - self.load_time:
                     note = Note(self.note_sprites, self.kirby_surf, (WINDOW_WIDTH / 5) * lane, 1000, self.notes, lane_num)
-                    self.notes[lane_num].append(note)
+                    self.notes[lane_num].insert(0, note)
                     self.beatmap[lane_num].pop()
     
     #? for debugging purposes only
