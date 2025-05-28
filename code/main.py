@@ -4,7 +4,7 @@ from menus import *
 from debug import *
 
 
-class Game():
+class Game:
     def __init__(self):
         #? Initialization
         pygame.init()
@@ -18,8 +18,11 @@ class Game():
         self.main_menu_sprites = pygame.sprite.Group()
         self.note_sprites = pygame.sprite.Group()
        
-       #? Notes
+        #? Notes
         self.notes: dict[str, list[Note]] = {"lane 1":[], "lane 2":[], "lane 3":[], "lane 4":[]}
+        
+        self.kirby_surf = pygame.image.load("assets/Kirb.png").convert_alpha()
+        self.font = pygame.Font(None, 50)
 
     def text(self, content):
         pass
@@ -45,8 +48,8 @@ class Game():
         
         #? Copy the audio to the same directory
         shutil.copyfile(
-            join(self.map_directory, 'audio.mp3'),
-            join(dirname(self.map_path), 'audio.mp3')
+            join(self.map_directory, 'audio.ogg'),
+            join(dirname(self.map_path), 'audio.ogg')
         )
     
     def load_map(self):
@@ -63,7 +66,7 @@ class Game():
         #         self.notes[lane_num].append(note)
         
         #? Load the music
-        self.music = pygame.mixer.Sound(join(dirname(self.map_path), 'audio.mp3'))
+        self.music = pygame.mixer.Sound(join(dirname(self.map_path), 'audio.ogg'))
         self.music.set_volume(0.5)
         self.load_time = pygame.time.get_ticks()
         if self.load_time > 1000: return
@@ -107,7 +110,7 @@ class Game():
             self.display.blit(text_surf, text_rect)
 
     def run(self):
-        self.menus = Menus()
+        self.menus = Menus(self)
         self.menus.main_menu()
         
 if __name__ == '__main__':

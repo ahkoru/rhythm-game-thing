@@ -1,21 +1,20 @@
 from sprites import *
 from main import Game, Button, PgDebug
 
-class Menus(Game):
-    def __init__(self):
-        super().__init__()
-                
+class Menus:
+    def __init__(self, game_instance: Game):
+        self.game = game_instance
+        self.display = pygame.display.get_surface()
+        
         #? Loading stuff
-        self.kirby_surf = pygame.image.load("assets/Kirb.png").convert_alpha()
-        self.font = pygame.Font(None, 50)
-        self.button = Button(self.main_menu_sprites, "assets/Kirb.png", True, (WINDOW_WIDTH/2, WINDOW_LENGTH/2))
+        self.button = Button(self.game.main_menu_sprites, "assets/Kirb.png", True, (WINDOW_WIDTH/2, WINDOW_LENGTH/2))
         self.debug = PgDebug()
         self.debug.debugging = True
     
     def main_menu(self):
         while True:
             #? Game clock
-            dt = self.clock.tick() / 1000
+            dt = self.game.clock.tick() / 1000
             
             #? Event loop
             for event in pygame.event.get():
@@ -27,43 +26,43 @@ class Menus(Game):
                         self.play()
 
             #? Updates
-            self.main_menu_sprites.update(dt)
+            self.game.main_menu_sprites.update(dt)
                 
             #? Draw
             self.display.fill('black')
-            self.main_menu_sprites.draw(self.display)
+            self.game.main_menu_sprites.draw(self.display)
        
             pygame.display.flip()
     
     def play(self):
-            running = True
-            self.import_map()
-            self.load_map()
-            self.load_time = pygame.time.get_ticks()
-            self.music.play()
-            while running:
-                dt = self.clock.tick() / 1000
+        running = True
+        self.game.import_map()
+        self.game.load_map()
+        self.game.load_time = pygame.time.get_ticks()
+        self.game.music.play()
+        while running:
+            dt = self.game.clock.tick() / 1000
+        
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    self.game.pressed(event)
+                    
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
             
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                    elif event.type == pygame.KEYDOWN:
-                        self.pressed(event)
+            #? Update
+            self.game.place_notes()
+            self.game.note_sprites.update(dt)
+            
+            #? Draw
+            self.display.fill('blue')
+            pygame.draw.line(self.display, 'white', (0, LINE_HEIGHT), (WINDOW_WIDTH, LINE_HEIGHT), 10)
+            self.game.note_sprites.draw(self.display)
                         
-                        if event.key == pygame.K_ESCAPE:
-                            running = False
-                
-                #? Update
-                self.place_notes()
-                self.note_sprites.update(dt)
-                
-                #? Draw
-                self.display.fill('blue')
-                pygame.draw.line(self.display, 'white', (0, LINE_HEIGHT), (WINDOW_WIDTH, LINE_HEIGHT), 10)
-                self.note_sprites.draw(self.display)
-                            
-                pygame.display.flip()
-                
-            self.note_sprites.empty()
-            self.music.stop()
+            pygame.display.flip()
+            
+        self.game.note_sprites.empty()
+        self.game.music.stop()
