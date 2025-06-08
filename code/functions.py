@@ -1,3 +1,6 @@
+import subprocess
+import os
+
 def read_osu_map(file_path: str,
                  reverse: bool = False) -> dict[str, list[int]]:
     """Converts a .osu file to something more readable for a certain rhythm game *cough* *cough*
@@ -43,3 +46,10 @@ def read_osu_map(file_path: str,
                 hit_objects[lane] = y_values[::-1]
             
     return hit_objects
+
+def get_file_path(start_dir="~/Downloads"):
+    start_dir = os.path.expanduser(start_dir)
+    print(start_dir)
+    result = subprocess.run(['zenity', '--file-selection', f'--filename={start_dir}/'], stdout=subprocess.PIPE)
+    file_path = result.stdout.decode('utf-8').strip()
+    return file_path

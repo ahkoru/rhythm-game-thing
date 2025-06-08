@@ -1,6 +1,5 @@
 import pygame
-from functions import read_osu_map
-from tkinter.filedialog import askopenfilename
+from functions import *
 from os import makedirs
 from os.path import join, dirname, isfile
 import json, shutil, sys

@@ -28,7 +28,7 @@ class Game:
         pass
     
     def import_map(self):
-        beatmap_path = askopenfilename()                        #* Absolute path
+        beatmap_path = get_file_path()                          #* Absolute path
         self.map_directory = dirname(beatmap_path)              #* Directory of the absolute path
         self.map_title = beatmap_path.split('/')[-2]            #* Title of the map
         self.map_path = join('maps', self.map_title,'map.json') #* Path where the converted map is placed
