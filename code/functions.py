@@ -2,7 +2,7 @@ import subprocess
 import os
 
 def read_osu_map(file_path: str,
-                 reverse: bool = False) -> dict[str, list[int]]:
+                 reverse: bool = False) -> tuple[str, str, dict[str, list[int]], str]:
     """Converts a .osu file to something more readable for a certain rhythm game *cough* *cough*
 
     Args:
@@ -13,9 +13,19 @@ def read_osu_map(file_path: str,
     """
     hit_objects: dict[str, list[int]] = {"lane 1":[], "lane 2":[], "lane 3":[], "lane 4":[]}
     in_hit_objects: bool = False
+    
     with open(file_path, "r", encoding="utf-8") as file:
         for line in file:
             line: str = line.strip()
+            
+            if "AudioFilename" in line:
+                audio_name = line.split(' ')[-1]
+            
+            if "TitleUnicode" in line:
+                title = line.split(':')[-1]
+                
+            if "ArtistUnicode" in line:
+                artist = line.split(':')[-1]
             
             if line == "[HitObjects]":
                 in_hit_objects = True
@@ -45,7 +55,7 @@ def read_osu_map(file_path: str,
             for lane, y_values in hit_objects.items():
                 hit_objects[lane] = y_values[::-1]
             
-    return hit_objects
+    return title, artist, hit_objects, audio_name
 
 def get_file_path(start_dir="~/Downloads"):
     start_dir = os.path.expanduser(start_dir)

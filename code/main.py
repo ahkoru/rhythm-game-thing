@@ -29,8 +29,14 @@ class Game:
     
     def import_map(self):
         beatmap_path = get_file_path()                          #* Absolute path
-        self.map_directory = dirname(beatmap_path)              #* Directory of the absolute path
-        self.map_title = beatmap_path.split('/')[-2]            #* Title of the map
+        self.map_directory = dirname(beatmap_path)              #* Absolute path of its directory
+
+        beatmap_data = read_osu_map(beatmap_path, True)              #* Convert .osu map file to something usable
+        self.map_title = beatmap_data[0]
+        self.map_artist = beatmap_data[1]
+        beatmap = beatmap_data[2]
+        self.audio = beatmap_data[3]
+        
         self.map_path = join('maps', self.map_title,'map.json') #* Path where the converted map is placed
         pygame.display.set_caption(self.map_title)              #* Change window title to the song title
         
@@ -40,7 +46,8 @@ class Game:
         
         makedirs(join('maps', self.map_title), exist_ok=True)   #* Make the necessary directories
         
-        beatmap = read_osu_map(beatmap_path, True)              #* Convert .osu map file to something usable
+        
+        
         
         #? Save it to the maps directory
         with open(self.map_path, 'w', encoding='utf-8') as file:
@@ -48,8 +55,8 @@ class Game:
         
         #? Copy the audio to the same directory
         shutil.copyfile(
-            join(self.map_directory, 'audio.ogg'),
-            join(dirname(self.map_path), 'audio.ogg')
+            join(self.map_directory, self.audio),
+            join(dirname(self.map_path), self.audio)
         )
     
     def load_map(self):
@@ -66,7 +73,7 @@ class Game:
         #         self.notes[lane_num].append(note)
         
         #? Load the music
-        self.music = pygame.mixer.Sound(join(dirname(self.map_path), 'audio.ogg'))
+        self.music = pygame.mixer.Sound(join(dirname(self.map_path), self.audio))
         self.music.set_volume(0.5)
         self.load_time = pygame.time.get_ticks()
         if self.load_time > 1000: return
