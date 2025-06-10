@@ -31,7 +31,7 @@ class Game:
         beatmap_path = get_file_path()                          #* Absolute path
         self.map_directory = dirname(beatmap_path)              #* Absolute path of its directory
 
-        beatmap_data = read_osu_map(beatmap_path, True)              #* Convert .osu map file to something usable
+        beatmap_data = read_osu_map(beatmap_path, True)         #* Convert .osu map file to something usable
         self.map_title = beatmap_data[0]
         self.map_artist = beatmap_data[1]
         beatmap = beatmap_data[2]
@@ -44,10 +44,7 @@ class Game:
         if isfile(self.map_path):
             return 
         
-        makedirs(join('maps', self.map_title), exist_ok=True)   #* Make the necessary directories
-        
-        
-        
+        makedirs(join('maps', self.map_title), exist_ok=True)   #* Make the necessary directories 
         
         #? Save it to the maps directory
         with open(self.map_path, 'w', encoding='utf-8') as file:
